@@ -1,0 +1,39 @@
+﻿<#@ template debug="True" hostspecific="True" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)References\com.miaow.Model.dll" #>
+<#@ assembly name="$(SolutionDir)References\com.miaow.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="com.miaow.Core" #>
+<#@ import namespace="com.miaow.Core.Domain.Entities" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+/* 
+	T4 模块自动生成的代码
+	<#= string.Format("{0:yyyy-MM-dd HH:mm:ss}",DateTime.Now) #>
+*/
+
+using System;
+using com.miaow.Core.Domain.Repositories;
+using com.miaow.Model;
+using System.Data.Entity;
+
+namespace com.miaow.DataServices
+{
+	public partial class MiaowDbContext
+	{
+<#
+var assembly = Assembly.LoadFile(@"F:\GithubRepository\com.miaow\References\com.miaow.Model.dll");
+var modelTypes = assembly.GetTypes().ToList();
+var modelInterface = typeof(IEntity);
+
+foreach (Type type in modelTypes.Where(x=>modelInterface.IsAssignableFrom(x) && x.Name.EndsWith("Model")))
+{
+    var typeName = type.Name;
+#>		public DbSet<<#=typeName#>> <#=typeName#>s { get; set; }	
+<#
+}
+#>
+	}
+}
